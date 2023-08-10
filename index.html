@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+<style>
+@media screen and (max-width: 1280px) {div.contentblock {width: 1200px;} } 
+@media screen and (max-width: 1140px) { div.contentblock {width: 1024px;} } 
+@media screen and (max-width: 992px) { div. contentblock {width: 970px;} } 
+
+
+</style>
+<style >
+.element-animation{ 
+    top: 0px; 
+    opacity: 0; 
+    position: relative; 
+} 
+.element-animation.element-show{ 
+position: relative; 
+top: 20px; 
+opacity: 1; 
+transition-duration: 1.4s; 
+}
+
+
+
+.conteiner{
+   width: 90%;
+   height: 50%;
+   background: linear-gradient(to top left, #4875FF  0%, #002188  100%);
+   border-radius: 20px;
+}
+.hgh{
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      display: flex;
+      justify-content: center;
+    }
+
+    .timer__items {
+      display: flex;
+      font-size: 25px;
+      color: #1F4595;
+    }
+
+
+    .timer__item {
+      position: relative;
+      min-width: 60px;
+      margin-left: 10px;
+      margin-right: 10px;
+      padding-bottom: 15px;
+    }
+
+
+    .timer__item::before {
+      content: attr(data-title);
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      font-size: 10px;
+    }
+
+
+    .timer__item:not(:last-child)::after {
+      content: ':';
+      position: absolute;
+      right: -15px;
+    }
+
+
+
+
+
+
+
+
+audio::-webkit-media-controls-panel {
+  background-color: #FFFFFF ;
+
+}
+
+
+
+
+
+
+
+.form-inner {
+   position: relative;
+}
+.form-inner h3 {
+   position: relative;
+   margin-top: 0;
+   color: #1F4595;
+   font-family: 'Roboto', sans-serif;
+   font-weight: 300;
+   font-size: 20px;
+   text-align: center;
+   text-transform: uppercase;
+
+}
+
+}
+.form-inner label {
+   display: block;
+   padding-left: 15px;
+   font-family: 'Roboto', sans-serif;
+   color: rgba(255, 255, 255, .6);
+   text-transform: uppercase;
+   font-size: 14px;
+}
+.form-inner input {
+   display: block;
+   width: 60%;
+   padding: 0 15px;
+   margin: 10px 0 15px;
+   border-width: 0;
+   line-height: 40px;
+   border-radius: 20px;
+   color: #1F4595;
+  
+   font-family: 'Roboto', sans-serif;
+background-color: #D6EAF8;
+}
+
+.form-inner textarea {
+   display: block;
+   width: 60%;
+   height: 45px;
+   padding: 0 15px;
+   margin: 10px 0 15px;
+   border-width: 0;
+   line-height: 40px;
+   border-radius: 20px;
+   color: #1F4595;
+ 
+   font-family: 'Roboto', sans-serif;
+   background-color: #D6EAF8;
+}
+
+.form-inner input[type="submit"] {
+       background: linear-gradient(to top left, #4875FF  0%, #002188  100%);
+
+
+
+}
+  
+
+
+
+
+
+</style>
+
+<style >
+   img.rot {
+  animation: 1s linear 0s normal none infinite running rot;
+  -webkit-animation: 5s linear 0s normal none infinite running rot;
+  width: 100px;
+}
+@keyframes rot {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rot {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
+
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // конечная дата
+      const deadline = new Date(new Date().getFullYear(), new Date().getMonth() + 3, 10);
+      // id таймера
+      let timerId = null;
+      // склонение числительных
+      function declensionNum(num, words) {
+        return words[(num % 100 > 4 && num % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(num % 10 < 5) ? num % 10 : 5]];
+      }
+      // вычисляем разницу дат и устанавливаем оставшееся времени в качестве содержимого элементов
+      function countdownTimer() {
+        const diff = deadline - new Date();
+        if (diff <= 0) {
+          clearInterval(timerId);
+        }
+        const days = diff > 0 ? Math.floor(diff / 1000 / 60 / 60 / 24) : 0;
+        const hours = diff > 0 ? Math.floor(diff / 1000 / 60 / 60) % 24 : 0;
+        const minutes = diff > 0 ? Math.floor(diff / 1000 / 60) % 60 : 0;
+        const seconds = diff > 0 ? Math.floor(diff / 1000) % 60 : 0;
+        $days.textContent = days < 10 ? '0' + days : days;
+        $hours.textContent = hours < 10 ? '0' + hours : hours;
+        $minutes.textContent = minutes < 10 ? '0' + minutes : minutes;
+        $seconds.textContent = seconds < 10 ? '0' + seconds : seconds;
+        $days.dataset.title = declensionNum(days, ['день', 'дня', 'дней']);
+        $hours.dataset.title = declensionNum(hours, ['час', 'часа', 'часов']);
+        $minutes.dataset.title = declensionNum(minutes, ['минута', 'минуты', 'минут']);
+        $seconds.dataset.title = declensionNum(seconds, ['секунда', 'секунды', 'секунд']);
+      }
+      // получаем элементы, содержащие компоненты даты
+      const $days = document.querySelector('.timer__days');
+      const $hours = document.querySelector('.timer__hours');
+      const $minutes = document.querySelector('.timer__minutes');
+      const $seconds = document.querySelector('.timer__seconds');
+      // вызываем функцию countdownTimer
+      countdownTimer();
+      // вызываем функцию countdownTimer каждую секунду
+      timerId = setInterval(countdownTimer, 1000);
+    });
+</script>
+
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Асқар & Мақпалдың үйлену тойына шақыру!</title> 
+
+
+</head>
+<body>
+
+
+
+
+<center>
+
+<img src="fgnghmhjmjh,.png" style="width: 100%; height: 100%;">
+
+</center>
+
+
+<img class="rot" src="tyjtyjytjyh.png" style = "position:absolute;
+    left: 3px;
+    top: 1250px;width: 70px; height:70px">
+
+<img class="rot" src="tyjtyjytjyh.png" style = "position:absolute;
+    right: 3px;
+    top: 1450px;width: 70px; height:70px">
+
+
+
+
+<img class="rot" src="tyjtyjytjyh.png" style = "position:absolute;
+    right: 3px;
+    top: 1100px;width: 60px; height:60px">
+
+<div class="element-animation" >   
+<audio><source type="audio/mpeg"src="fhbdf.mp3"/>
+</audio><button   type = "button" name = "button2" onclick="this.previousSibling.play()" style = "  margin-top: 0px;  border-radius: 50%;border:none;position:relative;background-color: white; 
+  left: 40%;
+    ">
+<img   src = "gtfnjytgfjythjytj.png" alt = "up" width = "60" height = "60" ></button>
+</div>
+
+
+
+
+<center>
+<div class="element-animation"> 
+<img src="yghjmuykmyjhkuhk.png" style="width: 85%; height: 85%;margin-top: 30px;">
+
+</div></center>
+
+
+
+<center>
+<div style="margin-top: 50px;">
+
+<a href="https://go.2gis.com/p4ash"><img src="hthf.png" style="width: 35px; height: 35px; border-radius: 20%;"></a>
+<a href="https://go.2gis.com/p4ash"><img src="rtgr.png" style="width: 35px; height: 35px;"></a>
+</div>
+</center>
+
+<center>
+<div class="element-animation"> 
+<img src="febdfbhfgnghy.png" style="width: 95%; height: 95%;margin-top: 30px;">
+
+</div></center>
+
+<center>
+
+ <div class="element-animation">
+<center><h6 style="font-family:piazzolla; color: #1F4595 ; margin-top: 50px; ">Тойға дейін:
+</h6></center>
+
+<center>
+   
+ <div class="timer" >
+  <div class="hgh">
+    <div class="timer__items" >
+
+      <div class="timer__item timer__days">00</div>
+      <div class="timer__item timer__hours">00</div>
+      <div class="timer__item timer__minutes">00</div>
+      <div class="timer__item timer__seconds">00</div>
+    </div></div>
+  </div>
+</center>
+<center><h6 style="font-family:piazzolla; color: #1F4595 ; margin-top: 20px; ">күн қалды
+</h6></center>
+</div>
+
+</center>
+
+
+
+<center style="margin-top: 80px;">
+<form class="transparent"method="post" id="form">
+<div class="form-inner">
+<h3>Тойға келесізбе?</h3>
+
+<input type="text" name="name" placeholder="Ия/жоқ"   minlength="2" maxlength="20" />
+<label style="color: #1F4595; ">Есіміңізді жазыңыз</label>
+    <textarea
+
+          name="message"
+          maxlength="100"
+          id="message"
+          cols="30"
+          rows="4"
+          placeholder="Арман-Марал"
+         
+        ></textarea>
+<input type="submit" value="Жіберу" style="color:white;">
+</div>
+</form></center>
+
+
+
+
+
+
+<script>
+    function onEntry(entry) { 
+      entry.forEach(change => { 
+        if (change.isIntersecting) { 
+         change.target.classList.add('element-show'); 
+         
+        } 
+      }); 
+    } 
+        let options = { 
+      threshold: [0.5] }; 
+    let observer = new IntersectionObserver(onEntry, options); 
+    let elements = document.querySelectorAll('.element-animation'); 
+     
+    for (let elm of elements) { 
+      observer.observe(elm); 
+    }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https: //fonts.googleapis.com/css2?family= Piazzolla :wght@100 & display=swap" rel="stylesheet">
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
